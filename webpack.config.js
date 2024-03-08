@@ -1,36 +1,36 @@
-var path = require('path');
-var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const path = require("path");
+const webpack = require("webpack");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
 module.exports = {
-  devtool: 'eval',
-  entry: [
-    'webpack-dev-server/client?http://localhost:4000',
-    'webpack/hot/only-dev-server',
-    './src/example/index'
-  ],
-  output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js',
-    publicPath: '/static/'
-  },
-  plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new ExtractTextPlugin({
-      filename: 'app.css',
-      allChunks: true
-    })
-  ],
-  module: {
-    loaders: [{
-      test: /\.js$/,
-      loaders: ['react-hot-loader/webpack', 'babel-loader'],
-      include: path.join(__dirname, 'src')
+    devtool: "eval",
+    entry: ["webpack-dev-server/client?http://localhost:4000", "webpack/hot/only-dev-server", "./src/example/index"],
+    output: {
+        path: path.join(__dirname, "dist"),
+        filename: "bundle.js",
+        publicPath: "/static/",
     },
-      {
-        test: /\.css/,
-        loaders: ['style-loader', 'css-loader']
-      }
-    ]
-  }
+    plugins: [new webpack.HotModuleReplacementPlugin(), new MiniCssExtractPlugin(), new ReactRefreshWebpackPlugin()],
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                use: ["babel-loader"],
+                include: path.join(__dirname, "src"),
+            },
+            {
+                test: /\.css$/,
+                use: [MiniCssExtractPlugin.loader, "css-loader"],
+            },
+            {
+                test: /\.tsx?$/,
+                use: "ts-loader",
+                exclude: /node_modules/,
+            },
+        ],
+    },
+    resolve: {
+        extensions: [".tsx", ".ts", ".js"],
+    },
 };
