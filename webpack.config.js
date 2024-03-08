@@ -2,16 +2,33 @@ const path = require("path");
 const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
+/** @type {import("webpack").Configuration} */
 module.exports = {
-    devtool: "eval",
-    entry: ["webpack-dev-server/client?http://localhost:4000", "webpack/hot/only-dev-server", "./src/example/index"],
-    output: {
-        path: path.join(__dirname, "dist"),
-        filename: "bundle.js",
-        publicPath: "/static/",
+    target: ["web", "browserslist"],
+    devServer: {
+        static: {
+            directory: path.join(__dirname, "dist"),
+            watch: true,
+            publicPath: "/",
+        },
+        port: 9000,
+        compress: true,
     },
-    plugins: [new webpack.HotModuleReplacementPlugin(), new MiniCssExtractPlugin(), new ReactRefreshWebpackPlugin()],
+    entry: "./src/example/index.js",
+    output: {
+        filename: "bundle.js",
+        path: path.join(__dirname, "dist"),
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: path.join(__dirname, "index.html"),
+        }),
+        new MiniCssExtractPlugin(),
+        new ReactRefreshWebpackPlugin(),
+        new webpack.HotModuleReplacementPlugin(),
+    ],
     module: {
         rules: [
             {
@@ -26,11 +43,21 @@ module.exports = {
             {
                 test: /\.tsx?$/,
                 use: "ts-loader",
-                exclude: /node_modules/,
+                include: path.join(__dirname, "src"),
+            },
+            {
+                test: /\.html$/,
+                use: "file-loader",
+                include: path.join(__dirname, "src"),
+            },
+            {
+                test: /\.(png|svg|jpg|jpeg|gif)$/i,
+                type: "asset/resource",
             },
         ],
     },
     resolve: {
         extensions: [".tsx", ".ts", ".js"],
     },
+    mode: process.env.NODE_ENV || "development",
 };
