@@ -8,10 +8,10 @@ import { RegionData, RegionInfo, RegionProps } from "../Region";
 
 export default function Demo() {
     const [regions, setRegions] = useState<RegionInfo[]>([]);
-    const onChange = (regions: RegionInfo[]) => {
+    const handleRegionChange = (regions: RegionInfo[]) => {
         setRegions(regions);
     };
-    const changeRegionData = (index: number, event: React.ChangeEvent<HTMLSelectElement>) => {
+    const onSelectRegionDataType = (index: number, event: React.ChangeEvent<HTMLSelectElement>) => {
         const region = regions[index];
         let color;
         switch (event.target.value) {
@@ -31,7 +31,7 @@ export default function Demo() {
         region.data.regionStyle = {
             background: color,
         };
-        onChange([
+        handleRegionChange([
             ...regions.slice(0, index),
             objectAssign({}, region, {
                 data: objectAssign({}, region.data, { dataType: event.target.value }),
@@ -46,7 +46,7 @@ export default function Demo() {
                 <div style={{ position: "absolute", right: 0, bottom: "-1.5em" }}>
                     <select
                         onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                            changeRegionData(regionProps.index, event)
+                            onSelectRegionDataType(regionProps.index, event)
                         }
                         value={regionProps.data.dataType}>
                         <option value="1">Green</option>
@@ -66,22 +66,14 @@ export default function Demo() {
             <div style={{ flexGrow: 1, flexShrink: 1, width: "50%" }}>
                 <RegionSelect
                     debug={true}
-                    maxRegions={1}
+                    maxRegions={5}
                     regions={regions}
                     regionStyle={regionStyle}
                     constraint
-                    onChange={onChange}
+                    onChange={handleRegionChange}
                     regionRenderer={regionRenderer}
                     style={{ border: "1px solid black" }}>
                     <img src={exampleDoc} width="100%" style={{ pointerEvents: "none" }} />
-
-                    {/* <div
-                        style={{
-                            position: "relative",
-                            width: "40rem",
-                            height: "40rem",
-                            backgroundSize: "cover",
-                        }}></div> */}
                 </RegionSelect>
             </div>
             <div style={{ flexGrow: 1, flexShrink: 1, width: "50%", padding: 15 }}>

@@ -5,6 +5,7 @@ import Region, { ClientPosition, RegionData, RegionInfo, RegionProps } from "./R
 
 export type ReactPointerInputEvent = React.MouseEvent | React.TouchEvent<HTMLElement>;
 export type DOMPointerEvent = MouseEvent | TouchEvent;
+export type ReactPointerEventHandler = React.TouchEventHandler<HTMLElement> & React.MouseEventHandler<HTMLElement>;
 
 interface RegionChangeData {
     imageOffsetLeft: number;
@@ -213,151 +214,137 @@ export const RegionSelect = ({
         regionChangeIndex.current = index;
     };
 
-    useEffect(() => {
-        const handlePointerMove = (event: DOMPointerEvent) => {
-            // console.log("handlePointerMove");
-            if (!isChanging) {
-                // console.log("Move: No isChanging");
-                return;
-            }
-            if (!regionChangeData.current) {
-                console.log("No regionChangeData");
-                return;
-            }
-            if (regionChangeIndex.current === -1) {
-                console.log("regionChangeIndex is -1");
-                return;
-            }
-            const index = regionChangeIndex.current;
-            const updatingRegion = regions[index];
-            const clientPos = getClientPos(event);
-            const currentRegionChangeData = regionChangeData.current;
+    const handleClickEnd = () => {
+        console.log("handleClickEnd");
+        if (!isChanging) {
+            console.log("No isChanging");
+            return;
+        }
 
-            let x, y, width, height;
-            if (!currentRegionChangeData.isMove) {
-                let x1Pc, y1Pc, x2Pc, y2Pc;
-                x1Pc =
-                    ((currentRegionChangeData.clientPosXStart - currentRegionChangeData.imageOffsetLeft) /
-                        currentRegionChangeData.imageWidth) *
-                    100;
-                y1Pc =
-                    ((currentRegionChangeData.clientPosYStart - currentRegionChangeData.imageOffsetTop) /
-                        currentRegionChangeData.imageHeight) *
-                    100;
-                x2Pc =
-                    ((clientPos.x - currentRegionChangeData.imageOffsetLeft) / currentRegionChangeData.imageWidth) *
-                    100;
-                y2Pc =
-                    ((clientPos.y - currentRegionChangeData.imageOffsetTop) / currentRegionChangeData.imageHeight) *
-                    100;
-                x = Math.min(x1Pc, x2Pc);
-                y = Math.min(y1Pc, y2Pc);
-                width = Math.abs(x1Pc - x2Pc);
-                height = Math.abs(y1Pc - y2Pc);
-                if (constraint) {
-                    if (x2Pc >= 100) {
-                        x = x1Pc;
-                        width = 100 - x1Pc;
-                    }
-                    if (y2Pc >= 100) {
-                        y = y1Pc;
-                        height = 100 - y1Pc;
-                    }
-                    if (x2Pc <= 0) {
-                        x = 0;
-                        width = x1Pc;
-                    }
-                    if (y2Pc <= 0) {
-                        y = 0;
-                        height = y1Pc;
-                    }
+        if (regionChangeIndex.current < 0) {
+            console.log("regionChangeIndex is -1");
+            return;
+        }
+        if (!regionChangeData.current) {
+            console.log("No regionChangeData");
+            return;
+        }
+
+        isChanging.current = false;
+        const index = regionChangeIndex.current;
+        const updatedRegions = [...regions];
+        console.log("updatedRegions", updatedRegions);
+        updatedRegions[index] = {
+            new: false,
+            isChanging: false,
+            data: updatedRegions[regionChangeIndex.current].data,
+            index: regionChangeIndex.current,
+        };
+        regionChangeIndex.current = -1;
+        regionChangeData.current = null;
+        onChange(updatedRegions);
+    };
+
+    const handlePointerMove: ReactPointerEventHandler = (event: DOMPointerEvent | ReactPointerInputEvent) => {
+        // console.log("handlePointerMove");
+        if (!isChanging) {
+            // console.log("Move: No isChanging");
+            return;
+        }
+        if (!regionChangeData.current) {
+            console.log("No regionChangeData");
+            return;
+        }
+        if (regionChangeIndex.current === -1) {
+            console.log("regionChangeIndex is -1");
+            return;
+        }
+        const index = regionChangeIndex.current;
+        const updatingRegion = regions[index];
+        const clientPos = getClientPos(event);
+        const currentRegionChangeData = regionChangeData.current;
+
+        let x, y, width, height;
+        if (!currentRegionChangeData.isMove) {
+            let x1Pc, y1Pc, x2Pc, y2Pc;
+            x1Pc =
+                ((currentRegionChangeData.clientPosXStart - currentRegionChangeData.imageOffsetLeft) /
+                    currentRegionChangeData.imageWidth) *
+                100;
+            y1Pc =
+                ((currentRegionChangeData.clientPosYStart - currentRegionChangeData.imageOffsetTop) /
+                    currentRegionChangeData.imageHeight) *
+                100;
+            x2Pc = ((clientPos.x - currentRegionChangeData.imageOffsetLeft) / currentRegionChangeData.imageWidth) * 100;
+            y2Pc = ((clientPos.y - currentRegionChangeData.imageOffsetTop) / currentRegionChangeData.imageHeight) * 100;
+            x = Math.min(x1Pc, x2Pc);
+            y = Math.min(y1Pc, y2Pc);
+            width = Math.abs(x1Pc - x2Pc);
+            height = Math.abs(y1Pc - y2Pc);
+            if (constraint) {
+                if (x2Pc >= 100) {
+                    x = x1Pc;
+                    width = 100 - x1Pc;
                 }
-            } else {
-                x =
-                    ((clientPos.x +
-                        (currentRegionChangeData.clientPosXOffset ?? 0) -
-                        currentRegionChangeData.imageOffsetLeft) /
-                        currentRegionChangeData.imageWidth) *
-                    100;
-                y =
-                    ((clientPos.y +
-                        (currentRegionChangeData.clientPosYOffset ?? 0) -
-                        currentRegionChangeData.imageOffsetTop) /
-                        currentRegionChangeData.imageHeight) *
-                    100;
-                width = updatingRegion.data.dimension?.width ?? 0;
-                height = updatingRegion.data.dimension?.height ?? 0;
-                if (constraint) {
-                    if (x + width >= 100) {
-                        x = Math.round(100 - width);
-                    }
-                    if (y + height >= 100) {
-                        y = Math.round(100 - height);
-                    }
-                    if (x <= 0) {
-                        x = 0;
-                    }
-                    if (y <= 0) {
-                        y = 0;
-                    }
+                if (y2Pc >= 100) {
+                    y = y1Pc;
+                    height = 100 - y1Pc;
+                }
+                if (x2Pc <= 0) {
+                    x = 0;
+                    width = x1Pc;
+                }
+                if (y2Pc <= 0) {
+                    y = 0;
+                    height = y1Pc;
                 }
             }
-
-            const rect: RegionInfo = {
-                data: {
-                    position: { x: x, y: y },
-                    dimension: { width: width, height: height },
-                },
-                isChanging: true,
-                index,
-            };
-            onChange([...regions.slice(0, index), objectAssign({}, updatingRegion, rect), ...regions.slice(index + 1)]);
-        };
-
-        const handleClickEnd = () => {
-            console.log("handleClickEnd");
-            if (!isChanging) {
-                console.log("No isChanging");
-                return;
+        } else {
+            x =
+                ((clientPos.x +
+                    (currentRegionChangeData.clientPosXOffset ?? 0) -
+                    currentRegionChangeData.imageOffsetLeft) /
+                    currentRegionChangeData.imageWidth) *
+                100;
+            y =
+                ((clientPos.y +
+                    (currentRegionChangeData.clientPosYOffset ?? 0) -
+                    currentRegionChangeData.imageOffsetTop) /
+                    currentRegionChangeData.imageHeight) *
+                100;
+            width = updatingRegion.data.dimension?.width ?? 0;
+            height = updatingRegion.data.dimension?.height ?? 0;
+            if (constraint) {
+                if (x + width >= 100) {
+                    x = Math.round(100 - width);
+                }
+                if (y + height >= 100) {
+                    y = Math.round(100 - height);
+                }
+                if (x <= 0) {
+                    x = 0;
+                }
+                if (y <= 0) {
+                    y = 0;
+                }
             }
+        }
 
-            isChanging.current = false;
-            const index = regionChangeIndex.current;
-            const updatingRegion = regions[index];
-            const changes: Partial<RegionInfo> = {
-                new: false,
-                isChanging: false,
-            };
-            console.log("changes", changes);
-            regionChangeIndex.current = -1;
-            regionChangeData.current = null;
-            onChange([
-                ...regions.slice(0, index),
-                objectAssign({}, updatingRegion, changes),
-                ...regions.slice(index + 1),
-            ]);
+        const rect: RegionInfo = {
+            data: {
+                position: { x: x, y: y },
+                dimension: { width: width, height: height },
+            },
+            isChanging: true,
+            index,
         };
-
-        document.addEventListener("mousemove", handlePointerMove);
-        document.addEventListener("touchmove", handlePointerMove);
-
-        document.addEventListener("mouseup", handleClickEnd);
-        document.addEventListener("touchend", handleClickEnd);
-        document.addEventListener("touchcancel", handleClickEnd);
-
-        // The returned function will be called on component unmount
-        return () => {
-            document.removeEventListener("mousemove", handlePointerMove);
-            document.removeEventListener("touchmove", handlePointerMove);
-
-            document.removeEventListener("mouseup", handleClickEnd);
-            document.removeEventListener("touchend", handleClickEnd);
-            document.removeEventListener("touchcancel", handleClickEnd);
-        };
-    }, []);
+        const updatedRegions = [...regions];
+        updatedRegions[index] = rect;
+        onChange(updatedRegions);
+    };
 
     useEffect(() => {
-        console.log({ regions });
+        console.log({ regions: regions });
     }, [regions]);
 
     useEffect(() => {
@@ -390,7 +377,10 @@ export const RegionSelect = ({
             style={objectAssign({}, styleSheet.RegionSelect, style)}
             className={className}
             onTouchStart={handleClickStart}
-            onMouseDown={handleClickStart}>
+            onMouseDown={handleClickStart}
+            onMouseUp={handleClickEnd}
+            onMouseMove={handlePointerMove}
+            onTouchMove={handlePointerMove}>
             {regionRects}
             {debug ? (
                 <table style={{ position: "absolute", right: 0, top: 0 }}>
