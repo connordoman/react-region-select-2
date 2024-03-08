@@ -5,6 +5,7 @@ export const style: { [key: string]: React.CSSProperties } = {
         border: "1px dashed rgba(0,0,0,0.5)",
         outline: "1px dashed rgba(255,255,255,0.5)",
         cursor: "move",
+        zIndex: "10",
     },
     RegionHandleSE: {
         position: "absolute",

@@ -7,7 +7,7 @@
     "scripts": {
         "start": "webpack serve",
         "lint": "eslint src",
-        "build": "env babel src --out-dir lib --ignore example --verbose",
+        "build": "env babel src --extensions '.ts,.tsx,.js,.jsx' --out-dir lib --ignore 'src/example/**' --verbose",
         "prepublish": "npm run -s build",
         "build:ts": "tsc"
     },
@@ -29,9 +29,11 @@
     },
     "homepage": "https://github.com/casavi/react-region-select",
     "devDependencies": {
+        "@babel/cli": "^7.23.9",
         "@babel/core": "^7.24.0",
         "@babel/preset-env": "^7.24.0",
         "@babel/preset-react": "^7.23.3",
+        "@babel/preset-typescript": "^7.23.3",
         "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
         "@types/babel__core": "^7",
         "@types/babel__preset-env": "^7",

@@ -16,7 +16,7 @@ module.exports = {
         port: 9000,
         compress: true,
     },
-    entry: "./src/example/index.js",
+    entry: "./src/example/index.tsx",
     output: {
         filename: "bundle.js",
         path: path.join(__dirname, "dist"),
