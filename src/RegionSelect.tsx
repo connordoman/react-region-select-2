@@ -25,7 +25,7 @@ interface RegionSelectProps {
     regions: RegionInfo[];
     children: React.ReactNode;
     onChange: (regions: RegionInfo[]) => void;
-    regionRenderer: (data: RegionInfo) => React.ReactNode;
+    regionRenderer?: (data: RegionInfo) => React.ReactNode;
     maxRegions: number;
     debug: boolean;
     className?: string;
@@ -364,7 +364,7 @@ export const RegionSelect = ({
                 key={index}
                 index={index}
                 customStyle={regionStyle}
-                dataRenderer={regionRenderer}
+                renderer={regionRenderer}
                 onCropStart={(event: ReactPointerInputEvent) => regionMoveStart(event, index)}
                 isChanging={index === regionChangeIndex.current}
             />

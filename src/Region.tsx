@@ -26,7 +26,7 @@ export interface RegionProps {
     customStyle?: React.CSSProperties;
     handles: boolean;
     isChanging: boolean;
-    dataRenderer: (data: RegionInfo) => React.ReactNode;
+    renderer?: (data: RegionInfo) => React.ReactNode;
     onCropStart: (e: ReactPointerInputEvent) => void;
 }
 
@@ -46,7 +46,7 @@ export const Region = ({
     data,
     customStyle,
     handles,
-    dataRenderer,
+    renderer: dataRenderer,
     onCropStart,
 }: RegionProps): React.ReactNode => {
     const localStyle: React.CSSProperties = {

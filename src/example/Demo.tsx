@@ -40,23 +40,6 @@ export default function Demo() {
         ]);
     };
 
-    const regionRenderer = (regionProps: RegionInfo) => {
-        if (!regionProps.isChanging) {
-            return (
-                <div style={{ position: "absolute", right: 0, bottom: "-1.5em" }}>
-                    <select
-                        onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                            onSelectRegionDataType(regionProps.index, event)
-                        }
-                        value={regionProps.data.dataType}>
-                        <option value="1">Green</option>
-                        <option value="2">Blue</option>
-                        <option value="3">Red</option>
-                    </select>
-                </div>
-            );
-        }
-    };
     const regionStyle = {
         background: "rgba(255, 0, 0, 0.5)",
     };
@@ -71,7 +54,6 @@ export default function Demo() {
                     regionStyle={regionStyle}
                     constraint
                     onChange={handleRegionChange}
-                    regionRenderer={regionRenderer}
                     style={{ border: "1px solid black" }}>
                     <img src={exampleDoc} width="100%" style={{ pointerEvents: "none" }} />
                 </RegionSelect>
