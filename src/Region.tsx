@@ -11,10 +11,9 @@ export interface RegionData {
     dimension: ClientDimension;
     dataType?: string;
     regionStyle?: React.CSSProperties;
-    index?: number;
 }
 
-export interface RegionDataRenderArgs {
+export interface RegionInfo {
     data: RegionData;
     isChanging: boolean;
     index: number;
@@ -22,16 +21,12 @@ export interface RegionDataRenderArgs {
 }
 
 export interface RegionProps {
-    width: number;
-    height: number;
-    x: number;
-    y: number;
-    data: RegionData;
-    changing: boolean;
     index: number;
+    data: RegionData;
     customStyle?: React.CSSProperties;
     handles: boolean;
-    dataRenderer: (data: RegionDataRenderArgs) => React.ReactNode;
+    isChanging: boolean;
+    dataRenderer: (data: RegionInfo) => React.ReactNode;
     onCropStart: (e: ReactPointerInputEvent) => void;
 }
 
@@ -47,28 +42,23 @@ export const RegionHandles = (): React.ReactNode => {
 };
 
 export const Region = ({
-    width,
-    height,
-    x,
-    y,
-    data,
-    changing,
     index,
+    data,
     customStyle,
     handles,
     dataRenderer,
     onCropStart,
 }: RegionProps): React.ReactNode => {
     const localStyle: React.CSSProperties = {
-        width: width + "%",
-        height: height + "%",
-        left: `${x}%`,
-        top: `${y}%`,
+        width: data.dimension.width + "%",
+        height: data.dimension.height + "%",
+        left: `${data.position.x}%`,
+        top: `${data.position.y}%`,
     };
-    const dataRenderArgs: RegionDataRenderArgs = {
-        data: data,
-        isChanging: changing,
-        index: index,
+    const dataRenderArgs: RegionInfo = {
+        data,
+        isChanging: false,
+        index,
     };
 
     return (

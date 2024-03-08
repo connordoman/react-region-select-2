@@ -4,11 +4,11 @@ import objectAssign from "object-assign";
 
 import "./style.css";
 import exampleDoc from "./example-doc.jpg";
-import { RegionData, RegionDataRenderArgs, RegionProps } from "../Region";
+import { RegionData, RegionInfo, RegionProps } from "../Region";
 
 export default function Demo() {
-    const [regions, setRegions] = useState<RegionDataRenderArgs[]>([]);
-    const onChange = (regions: RegionDataRenderArgs[]) => {
+    const [regions, setRegions] = useState<RegionInfo[]>([]);
+    const onChange = (regions: RegionInfo[]) => {
         setRegions(regions);
     };
     const changeRegionData = (index: number, event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -40,7 +40,7 @@ export default function Demo() {
         ]);
     };
 
-    const regionRenderer = (regionProps: RegionDataRenderArgs) => {
+    const regionRenderer = (regionProps: RegionInfo) => {
         if (!regionProps.isChanging) {
             return (
                 <div style={{ position: "absolute", right: 0, bottom: "-1.5em" }}>

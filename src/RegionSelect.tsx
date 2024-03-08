@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import objectAssign from "object-assign";
 import styleSheet from "./style";
-import Region, { ClientPosition, RegionData, RegionDataRenderArgs, RegionProps } from "./Region";
+import Region, { ClientPosition, RegionData, RegionInfo, RegionProps } from "./Region";
 
 export type ReactPointerInputEvent = React.MouseEvent | React.TouchEvent<HTMLElement>;
 export type DOMPointerEvent = MouseEvent | TouchEvent;
@@ -21,10 +21,10 @@ interface RegionChangeData {
 
 interface RegionSelectProps {
     constraint: boolean;
-    regions: RegionDataRenderArgs[];
+    regions: RegionInfo[];
     children: React.ReactNode;
-    onChange: (regions: RegionDataRenderArgs[]) => void;
-    regionRenderer: (data: RegionDataRenderArgs) => React.ReactNode;
+    onChange: (regions: RegionInfo[]) => void;
+    regionRenderer: (data: RegionInfo) => React.ReactNode;
     maxRegions: number;
     debug: boolean;
     className?: string;
@@ -111,11 +111,10 @@ export const RegionSelect = ({
         console.log("xPc", xPc);
         console.log("yPc", yPc);
         isChanging.current = true;
-        const rect: RegionDataRenderArgs = {
+        const rect: RegionInfo = {
             data: {
                 position: { x: xPc, y: yPc },
                 dimension: { width: 0, height: 0 },
-                index: regionCounter.current,
             },
             new: true,
             isChanging: true,
@@ -304,7 +303,7 @@ export const RegionSelect = ({
                 }
             }
 
-            const rect: RegionDataRenderArgs = {
+            const rect: RegionInfo = {
                 data: {
                     position: { x: x, y: y },
                     dimension: { width: width, height: height },
@@ -325,7 +324,7 @@ export const RegionSelect = ({
             isChanging.current = false;
             const index = regionChangeIndex.current;
             const updatingRegion = regions[index];
-            const changes: Partial<RegionDataRenderArgs> = {
+            const changes: Partial<RegionInfo> = {
                 new: false,
                 isChanging: false,
             };
@@ -373,10 +372,6 @@ export const RegionSelect = ({
         }
         return (
             <Region
-                x={rect.position.x}
-                y={rect.position.y}
-                width={rect.dimension.width}
-                height={rect.dimension.height}
                 handles={!reg.new}
                 data={rect}
                 key={index}
@@ -384,7 +379,7 @@ export const RegionSelect = ({
                 customStyle={regionStyle}
                 dataRenderer={regionRenderer}
                 onCropStart={(event: ReactPointerInputEvent) => regionMoveStart(event, index)}
-                changing={index === regionChangeIndex.current}
+                isChanging={index === regionChangeIndex.current}
             />
         );
     });
