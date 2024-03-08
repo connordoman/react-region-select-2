@@ -11,34 +11,6 @@ export default function Demo() {
     const handleRegionChange = (regions: RegionInfo[]) => {
         setRegions(regions);
     };
-    const onSelectRegionDataType = (index: number, event: React.ChangeEvent<HTMLSelectElement>) => {
-        const region = regions[index];
-        let color;
-        switch (event.target.value) {
-            case "1":
-                color = "rgba(0, 255, 0, 0.5)";
-                break;
-            case "2":
-                color = "rgba(0, 0, 255, 0.5)";
-                break;
-            case "3":
-                color = "rgba(255, 0, 0, 0.5)";
-                break;
-            default:
-                color = "rgba(0, 0, 0, 0.5)";
-        }
-
-        region.data.regionStyle = {
-            background: color,
-        };
-        handleRegionChange([
-            ...regions.slice(0, index),
-            objectAssign({}, region, {
-                data: objectAssign({}, region.data, { dataType: event.target.value }),
-            }),
-            ...regions.slice(index + 1),
-        ]);
-    };
 
     const regionStyle = {
         background: "rgba(255, 0, 0, 0.5)",

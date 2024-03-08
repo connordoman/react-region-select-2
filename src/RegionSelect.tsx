@@ -85,23 +85,18 @@ export const RegionSelect = ({
         };
     };
     const handleClickStart = (event: ReactPointerInputEvent) => {
-        console.log("handleClickStart");
-
         const target = event.target as HTMLElement;
         if (target.dataset.wrapper || target.dataset.dir) {
-            console.log("No dataset wrapper or dir");
             return;
         }
         // Rest of the code...
         event.preventDefault();
 
         if (!imageRef.current) {
-            console.log("No imageRef");
             return;
         }
 
         if (isChanging.current) {
-            console.log("isChanging");
             return;
         }
 
@@ -109,8 +104,6 @@ export const RegionSelect = ({
         const imageOffset = getElementOffset(imageRef.current);
         const xPc = ((clientPos.x - imageOffset.x) / imageRef.current.offsetWidth) * 100;
         const yPc = ((clientPos.y - imageOffset.y) / imageRef.current.offsetHeight) * 100;
-        console.log("xPc", xPc);
-        console.log("yPc", yPc);
         isChanging.current = true;
         const rect: RegionInfo = {
             data: {
@@ -145,16 +138,13 @@ export const RegionSelect = ({
         }
     };
     const regionMoveStart = (event: ReactPointerInputEvent, index: number) => {
-        console.log("regionMoveStart");
         const target = event.target as HTMLElement;
         if (!target.dataset.wrapper && !target.dataset.dir) {
-            // console.log("No dataset wrapper or dir");
-            return;
+            //             return;
         }
         event.preventDefault();
 
         if (!imageRef.current) {
-            console.log("No imageRef");
             return;
         }
 
@@ -165,7 +155,6 @@ export const RegionSelect = ({
         const regionDim = regions[index].data.dimension;
 
         if (!regionPos || !regionDim) {
-            console.log("No regionPos or regionDim");
             return;
         }
 
@@ -215,25 +204,20 @@ export const RegionSelect = ({
     };
 
     const handleClickEnd = () => {
-        console.log("handleClickEnd");
         if (!isChanging) {
-            console.log("No isChanging");
             return;
         }
 
         if (regionChangeIndex.current < 0) {
-            console.log("regionChangeIndex is -1");
             return;
         }
         if (!regionChangeData.current) {
-            console.log("No regionChangeData");
             return;
         }
 
         isChanging.current = false;
         const index = regionChangeIndex.current;
         const updatedRegions = [...regions];
-        console.log("updatedRegions", updatedRegions);
         updatedRegions[index] = {
             new: false,
             isChanging: false,
@@ -246,17 +230,13 @@ export const RegionSelect = ({
     };
 
     const handlePointerMove: ReactPointerEventHandler = (event: DOMPointerEvent | ReactPointerInputEvent) => {
-        // console.log("handlePointerMove");
         if (!isChanging) {
-            // console.log("Move: No isChanging");
             return;
         }
         if (!regionChangeData.current) {
-            console.log("No regionChangeData");
             return;
         }
         if (regionChangeIndex.current === -1) {
-            console.log("regionChangeIndex is -1");
             return;
         }
         const index = regionChangeIndex.current;
@@ -343,18 +323,11 @@ export const RegionSelect = ({
         onChange(updatedRegions);
     };
 
-    useEffect(() => {
-        console.log({ regions: regions });
-    }, [regions]);
-
-    useEffect(() => {
-        console.log({ isChanging });
-    }, [isChanging]);
+    useEffect(() => {}, [isChanging]);
 
     const regionRects = regions.map((reg, index) => {
         const rect = reg.data;
         if (!rect) {
-            console.log("No rect");
             return null;
         }
         return (
