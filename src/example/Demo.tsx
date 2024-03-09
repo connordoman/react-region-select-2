@@ -18,7 +18,7 @@ export default function Demo() {
     };
 
     const renderer = (regionProps: RegionInfo) => {
-        if (!regionProps.isChanging) {
+        if (!regionProps.data.isChanging) {
             return (
                 <div style={{ position: "absolute", right: 0, bottom: "-1.5em", zIndex: 20 }}>
                     <select onChange={(event) => console.log(event.target.value)} value={regionProps.data.dataType}>

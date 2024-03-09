@@ -6,19 +6,13 @@
 
 ## Usage
 
-```jsx
-var ReactRegionSelect = require('react-region-select');
-// or es6:
-import ReactRegionSelect from 'react-region-select';
+```tsx
+import ReactRegionSelect from "react-region-select";
 ```
 
-```jsx
-<RegionSelect
-	maxRegions={5}
-	regions={this.state.regions}
-	onChange={this.onChange}
-	regionRenderer={this.regionRenderer}>
-		<img src='/static/example-doc.jpg' width='700px'/>
+```tsx
+<RegionSelect maxRegions={5} regions={this.state.regions} onChange={this.onChange} regionRenderer={this.regionRenderer}>
+    <img src="/static/example-doc.jpg" width="700px" />
 </RegionSelect>
 ```
 
@@ -30,13 +24,13 @@ per region (see `regionRenderer`).
 
 Homepage: [casavi.de](http://casavi.de/)  
 Author: [David Langer](https://github.com/davidlanger)  
-Contact us: <hello@casavi.de>  
+Contact us: <hello@casavi.de>
 
 ## API
 
 ### Props
 
-#### regions (array)
+#### regions (`RegionInfo[]`)
 
 Array of regions. Regions are objects with the following signature:
 
@@ -97,5 +91,5 @@ Start via `npm start`. Specify port via environment variable `PORT`: `env PORT=4
 
 ## Based on
 
-- For development:  [React Hot Boilerplate / Playground](https://github.com/timuric/react-prototype-playground)
-- Inspiration for region selection: [React Image Crop](https://github.com/DominicTobias/react-image-crop)
+-   For development: [React Hot Boilerplate / Playground](https://github.com/timuric/react-prototype-playground)
+-   Inspiration for region selection: [React Image Crop](https://github.com/DominicTobias/react-image-crop)

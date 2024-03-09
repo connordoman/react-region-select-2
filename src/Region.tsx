@@ -6,23 +6,17 @@ import { ReactPointerInputEvent } from "./RegionSelect";
 export type ClientPosition = { x: number; y: number };
 export type ClientDimension = { width: number; height: number };
 
-export interface RegionData {
-    position: ClientPosition;
-    dimension: ClientDimension;
-    dataType?: string;
-    regionStyle?: React.CSSProperties;
-}
+export type RegionData = Record<string, any>;
 
 export interface RegionInfo {
     data: RegionData;
-    isChanging: boolean;
-    index: number;
-    new?: boolean;
+    pos: ClientPosition;
+    dim: ClientDimension;
 }
 
 export interface RegionProps {
     index: number;
-    data: RegionData;
+    region: RegionInfo;
     customStyle?: React.CSSProperties;
     handles: boolean;
     isChanging: boolean;
@@ -43,32 +37,35 @@ export const RegionHandles = (): React.ReactNode => {
 
 export const Region = ({
     index,
-    data,
+    region,
     customStyle,
     handles,
-    renderer: dataRenderer,
+    renderer,
     onCropStart,
 }: RegionProps): React.ReactNode => {
     const localStyle: React.CSSProperties = {
-        width: data.dimension.width + "%",
-        height: data.dimension.height + "%",
-        left: `${data.position.x}%`,
-        top: `${data.position.y}%`,
+        width: region.dim.width + "%",
+        height: region.dim.height + "%",
+        left: `${region.pos.x}%`,
+        top: `${region.pos.y}%`,
     };
     const dataRenderArgs: RegionInfo = {
-        data,
-        isChanging: false,
-        index,
+        ...region,
+        data: {
+            ...region.data,
+            index,
+            isChanging: false,
+        },
     };
 
     return (
         <div
-            style={objectAssign({}, style.Region, localStyle, customStyle, data.regionStyle)}
+            style={objectAssign({}, style.Region, localStyle, customStyle, region.data.regionStyle)}
             onMouseDown={onCropStart}
             onTouchStart={onCropStart}
             data-wrapper="wrapper">
             {handles ? <RegionHandles /> : null}
-            {dataRenderer ? dataRenderer(dataRenderArgs) : null}
+            {renderer ? renderer(dataRenderArgs) : null}
         </div>
     );
 };

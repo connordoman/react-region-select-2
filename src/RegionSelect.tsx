@@ -24,26 +24,26 @@ interface RegionSelectProps {
     constraint: boolean;
     regions: RegionInfo[];
     children: React.ReactNode;
-    onChange: (regions: RegionInfo[]) => void;
-    regionRenderer?: (data: RegionInfo) => React.ReactNode;
     maxRegions: number;
     debug: boolean;
     className?: string;
     style?: React.CSSProperties;
     regionStyle?: React.CSSProperties;
+    regionRenderer?: (data: RegionInfo) => React.ReactNode;
+    onChange: (regions: RegionInfo[]) => void;
 }
 
 export const RegionSelect = ({
     constraint,
     regions,
     children,
-    onChange,
-    regionRenderer,
     maxRegions,
     debug,
     className,
     style,
     regionStyle,
+    regionRenderer,
+    onChange,
 }: RegionSelectProps) => {
     const regionCounter = useRef(0);
     const imageRef = useRef<HTMLImageElement>(null);
@@ -107,12 +107,12 @@ export const RegionSelect = ({
         isChanging.current = true;
         const rect: RegionInfo = {
             data: {
-                position: { x: xPc, y: yPc },
-                dimension: { width: 0, height: 0 },
+                new: true,
+                isChanging: true,
+                index: regionCounter.current,
             },
-            new: true,
-            isChanging: true,
-            index: regionCounter.current,
+            pos: { x: xPc, y: yPc },
+            dim: { width: 0, height: 0 },
         };
         regionCounter.current = regionCounter.current + 1;
 
@@ -151,8 +151,8 @@ export const RegionSelect = ({
         const clientPos = getClientPos(event);
         const imageOffset = getElementOffset(imageRef.current);
 
-        const regionPos = regions[index].data.position;
-        const regionDim = regions[index].data.dimension;
+        const regionPos = regions[index].pos;
+        const regionDim = regions[index].dim;
 
         if (!regionPos || !regionDim) {
             return;
@@ -219,10 +219,13 @@ export const RegionSelect = ({
         const index = regionChangeIndex.current;
         const updatedRegions = [...regions];
         updatedRegions[index] = {
-            new: false,
-            isChanging: false,
-            data: updatedRegions[regionChangeIndex.current].data,
-            index: regionChangeIndex.current,
+            ...updatedRegions[index],
+            data: {
+                ...updatedRegions[index].data,
+                new: false,
+                index,
+                isChanging: false,
+            },
         };
         regionChangeIndex.current = -1;
         regionChangeData.current = null;
@@ -292,8 +295,8 @@ export const RegionSelect = ({
                     currentRegionChangeData.imageOffsetTop) /
                     currentRegionChangeData.imageHeight) *
                 100;
-            width = updatingRegion.data.dimension?.width ?? 0;
-            height = updatingRegion.data.dimension?.height ?? 0;
+            width = updatingRegion.dim.width ?? 0;
+            height = updatingRegion.dim.height ?? 0;
             if (constraint) {
                 if (x + width >= 100) {
                     x = Math.round(100 - width);
@@ -312,11 +315,11 @@ export const RegionSelect = ({
 
         const rect: RegionInfo = {
             data: {
-                position: { x: x, y: y },
-                dimension: { width: width, height: height },
+                isChanging: true,
+                index,
             },
-            isChanging: true,
-            index,
+            dim: { width: width, height: height },
+            pos: { x: x, y: y },
         };
         const updatedRegions = [...regions];
         updatedRegions[index] = rect;
@@ -332,8 +335,8 @@ export const RegionSelect = ({
         }
         return (
             <Region
-                handles={!reg.new}
-                data={rect}
+                handles={!reg.data.new}
+                region={reg}
                 key={index}
                 index={index}
                 customStyle={regionStyle}
@@ -364,10 +367,10 @@ export const RegionSelect = ({
                             }
                             return (
                                 <tr key={index}>
-                                    <td>x: {rect.data.position.x.toFixed(1)}</td>
-                                    <td>y: {rect.data.position.y.toFixed(1)}</td>
-                                    <td>width: {rect.data.dimension.width.toFixed(1)}</td>
-                                    <td>height: {rect.data.dimension.height.toFixed(1)}</td>
+                                    <td>x: {rect.pos.x.toFixed(1)}</td>
+                                    <td>y: {rect.pos.y.toFixed(1)}</td>
+                                    <td>width: {rect.dim.width.toFixed(1)}</td>
+                                    <td>height: {rect.dim.height.toFixed(1)}</td>
                                 </tr>
                             );
                         })}
