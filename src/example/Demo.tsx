@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import RegionSelect from "../RegionSelect";
-import objectAssign from "object-assign";
-
-import "./style.css";
+import { RegionInfo } from "../Region";
 import exampleDoc from "./example-doc.jpg";
-import { RegionData, RegionInfo, RegionProps } from "../Region";
+import "./style.css";
 
 export default function Demo() {
     const [regions, setRegions] = useState<RegionInfo[]>([]);
@@ -18,13 +16,13 @@ export default function Demo() {
         let color;
         switch (event.target.value) {
             case "1":
-                color = "rgba(0, 255, 0, 0.5)";
+                color = "rgba(255, 0, 0, 0.5)";
                 break;
             case "2":
                 color = "rgba(0, 0, 255, 0.5)";
                 break;
             case "3":
-                color = "rgba(255, 0, 0, 0.5)";
+                color = "rgba(0, 255, 0, 0.5)";
                 break;
             default:
                 color = "rgba(0, 0, 0, 0.5)";
@@ -33,6 +31,8 @@ export default function Demo() {
         region.data.regionStyle = {
             background: color,
         };
+
+        region.data.dataType = event.target.value;
 
         const newRegions = [...regions];
         newRegions[index] = region;
@@ -55,9 +55,9 @@ export default function Demo() {
                         // style={placement}
                         onChange={(event) => handleRegionChange(event, data.index)}
                         value={data.dataType}>
-                        <option value="1">Green</option>
+                        <option value="1">Red</option>
                         <option value="2">Blue</option>
-                        <option value="3">Red</option>
+                        <option value="3">Green</option>
                     </select>
                 </div>
             );

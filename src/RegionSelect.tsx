@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import objectAssign from "object-assign";
 import styleSheet from "./style";
-import Region, { ClientPosition, RegionData, RegionInfo, RegionProps } from "./Region";
+import Region, { ClientPosition, RegionInfo } from "./Region";
 import { isSubElement } from "./support";
 
 export type ReactPointerInputEvent = React.MouseEvent | React.TouchEvent<HTMLElement>;
@@ -316,11 +316,12 @@ export const RegionSelect = ({
 
         const rect: RegionInfo = {
             data: {
+                ...updatingRegion.data,
                 isChanging: true,
                 index,
             },
-            dim: { width: width, height: height },
-            pos: { x: x, y: y },
+            dim: { width, height },
+            pos: { x, y },
         };
         const updatedRegions = [...regions];
         updatedRegions[index] = rect;

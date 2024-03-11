@@ -45,8 +45,8 @@ export const Region = ({
     onCropStart,
 }: RegionProps): React.ReactNode => {
     const localStyle: React.CSSProperties = {
-        width: region.dim.width + "%",
-        height: region.dim.height + "%",
+        width: `${region.dim.width}%`,
+        height: `${region.dim.height}%`,
         left: `${region.pos.x}%`,
         top: `${region.pos.y}%`,
     };
@@ -60,12 +60,12 @@ export const Region = ({
         },
     };
 
+    const mergedRegionStyle = objectAssign({}, style.Region, localStyle, customStyle, region.data.regionStyle);
+
+    console.log({ dataRenderArgs });
+
     return (
-        <div
-            style={objectAssign({}, style.Region, localStyle, customStyle, region.data.regionStyle)}
-            onMouseDown={onCropStart}
-            onTouchStart={onCropStart}
-            data-wrapper="wrapper">
+        <div style={mergedRegionStyle} onMouseDown={onCropStart} onTouchStart={onCropStart} data-wrapper="wrapper">
             {handles ? <RegionHandles /> : null}
             {renderer ? renderer(dataRenderArgs) : null}
         </div>
