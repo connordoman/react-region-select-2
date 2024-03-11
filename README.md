@@ -1,6 +1,6 @@
 # React Region Select 2
 
-Based on [`react-region-select`](https://github.com/casavi/react-region-select) by [David Langer](https://github.com/davidlanger) of [casavi.de](http://casavi.de/).
+A reimplementation of [`react-region-select`](https://github.com/casavi/react-region-select) by [David Langer](https://github.com/davidlanger) of [casavi.de](http://casavi.de/), updated to use modern React and TypeScript.
 
 ## Usage
 
