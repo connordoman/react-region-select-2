@@ -72,7 +72,6 @@ export default function Demo() {
                     maxRegions={5}
                     regions={regions}
                     regionStyle={regionStyle}
-                    constraint
                     onChange={handleChange}
                     regionRenderer={renderer}
                     style={{ border: "1px solid black" }}>

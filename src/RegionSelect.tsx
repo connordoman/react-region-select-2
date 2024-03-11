@@ -22,11 +22,10 @@ interface RegionChangeData {
 }
 
 interface RegionSelectProps {
-    constraint: boolean;
     regions: RegionInfo[];
     children: React.ReactNode;
-    maxRegions: number;
-    debug: boolean;
+    maxRegions?: number;
+    debug?: boolean;
     className?: string;
     style?: React.CSSProperties;
     regionStyle?: React.CSSProperties;
@@ -35,10 +34,9 @@ interface RegionSelectProps {
 }
 
 export const RegionSelect = ({
-    constraint,
     regions,
     children,
-    maxRegions,
+    maxRegions = 5,
     debug,
     className,
     style,
@@ -134,7 +132,6 @@ export const RegionSelect = ({
             onChange([...regions.slice(0, maxRegions - 1), rect]);
             regionChangeIndex.current = maxRegions - 1;
         }
-        console.log("Click start:", isChanging.current, regionChangeIndex.current, regionChangeData.current);
     };
 
     const regionMoveStart = (event: ReactPointerInputEvent, index: number) => {
@@ -214,8 +211,6 @@ export const RegionSelect = ({
 
         isChanging.current = false;
 
-        console.log("No longer changing:", isChanging.current, regionChangeIndex.current, regionChangeData.current);
-
         const index = regionChangeIndex.current;
         const updatedRegions = [...regions];
 
@@ -265,23 +260,23 @@ export const RegionSelect = ({
             y = Math.min(y1Pc, y2Pc);
             width = Math.abs(x1Pc - x2Pc);
             height = Math.abs(y1Pc - y2Pc);
-            if (constraint) {
-                if (x2Pc >= 100) {
-                    x = x1Pc;
-                    width = 100 - x1Pc;
-                }
-                if (y2Pc >= 100) {
-                    y = y1Pc;
-                    height = 100 - y1Pc;
-                }
-                if (x2Pc <= 0) {
-                    x = 0;
-                    width = x1Pc;
-                }
-                if (y2Pc <= 0) {
-                    y = 0;
-                    height = y1Pc;
-                }
+
+            // constrain to underlying element dimensions (100%)
+            if (x2Pc >= 100) {
+                x = x1Pc;
+                width = 100 - x1Pc;
+            }
+            if (y2Pc >= 100) {
+                y = y1Pc;
+                height = 100 - y1Pc;
+            }
+            if (x2Pc <= 0) {
+                x = 0;
+                width = x1Pc;
+            }
+            if (y2Pc <= 0) {
+                y = 0;
+                height = y1Pc;
             }
         } else {
             x =
@@ -298,19 +293,19 @@ export const RegionSelect = ({
                 100;
             width = updatingRegion.dim.width ?? 0;
             height = updatingRegion.dim.height ?? 0;
-            if (constraint) {
-                if (x + width >= 100) {
-                    x = Math.round(100 - width);
-                }
-                if (y + height >= 100) {
-                    y = Math.round(100 - height);
-                }
-                if (x <= 0) {
-                    x = 0;
-                }
-                if (y <= 0) {
-                    y = 0;
-                }
+
+            // constrain to underlying element dimensions (100%)
+            if (x + width >= 100) {
+                x = Math.round(100 - width);
+            }
+            if (y + height >= 100) {
+                y = Math.round(100 - height);
+            }
+            if (x <= 0) {
+                x = 0;
+            }
+            if (y <= 0) {
+                y = 0;
             }
         }
 
