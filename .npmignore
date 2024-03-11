@@ -1,2 +1,7 @@
-src
-static
+src/
+static/
+webpack.config.js
+.eslintrc.js
+.babelrc
+.yarnrc.yml
+.yarn/

@@ -1,6 +1,6 @@
 {
-    "name": "react-region-select",
-    "version": "2.3.0",
+    "name": "react-region-select-2",
+    "version": "1.0.0",
     "description": "Multi region selection (i.e. on images)",
     "main": "./lib/RegionSelect.js",
     "private": true,
@@ -12,7 +12,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/casavi/react-region-select.git"
+        "url": "https://github.com/connordoman/react-region-select-2.git"
     },
     "keywords": [
         "react",
@@ -24,9 +24,9 @@
     "author": "David Langer <david@casavi.de> (http://github.com/davidlanger)",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/casavi/react-region-select/issues"
+        "url": "https://github.com/connordoman/react-region-select-2/issues"
     },
-    "homepage": "https://github.com/casavi/react-region-select",
+    "homepage": "https://github.com/connordoman/react-region-select-2",
     "devDependencies": {
         "@babel/cli": "^7.23.9",
         "@babel/core": "^7.24.0",
