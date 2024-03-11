@@ -1,8 +1,13 @@
 {
     "name": "react-region-select-2",
-    "version": "1.0.1",
-    "description": "Multi region selection (i.e. on images)",
-    "main": "./lib/RegionSelect.js",
+    "version": "1.1.0",
+    "description": "TypeScript enabled multiple region selector for React",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
     "scripts": {
         "build:js": "esbuild src/*.{ts,tsx} --outdir=dist --platform=node --target=es2019 --format=esm --minify --sourcemap",
         "build:types": "tsc src/*.{ts,tsx} --jsx react --esModuleInterop --declaration --emitDeclarationOnly --outDir dist",
@@ -24,7 +29,7 @@
         "crop",
         "select"
     ],
-    "author": "David Langer <david@casavi.de> (http://github.com/davidlanger)",
+    "author": "Connor Doman <connor@connordoman.dev> (http://github.com/connordoman)",
     "license": "MIT",
     "bugs": {
         "url": "https://github.com/connordoman/react-region-select-2/issues"
@@ -67,7 +72,6 @@
         "prop-types": "^15.8.1"
     },
     "packageManager": "yarn@4.1.1",
-    "types": "src/index.d.ts",
     "browserslist": [
         ">0.2%",
         "not dead",
