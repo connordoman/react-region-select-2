@@ -5,3 +5,4 @@ webpack.config.js
 .babelrc
 .yarnrc.yml
 .yarn/
+example/
