@@ -5,11 +5,10 @@
     "main": "./lib/RegionSelect.js",
     "private": true,
     "scripts": {
-        "start": "webpack serve",
+        "dev": "webpack serve",
         "lint": "eslint src",
         "build": "env babel src --extensions '.ts,.tsx,.js,.jsx' --out-dir lib --ignore 'src/example/**' --verbose",
-        "prepublish": "npm run -s build",
-        "build:ts": "tsc"
+        "prepublish": "npm run -s build"
     },
     "repository": {
         "type": "git",

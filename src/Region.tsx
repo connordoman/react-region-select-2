@@ -39,6 +39,7 @@ export const Region = ({
     index,
     region,
     customStyle,
+    isChanging,
     handles,
     renderer,
     onCropStart,
@@ -49,12 +50,13 @@ export const Region = ({
         left: `${region.pos.x}%`,
         top: `${region.pos.y}%`,
     };
+
     const dataRenderArgs: RegionInfo = {
         ...region,
         data: {
             ...region.data,
+            isChanging,
             index,
-            isChanging: false,
         },
     };
 

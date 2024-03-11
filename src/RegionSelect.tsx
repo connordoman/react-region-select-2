@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import objectAssign from "object-assign";
 import styleSheet from "./style";
 import Region, { ClientPosition, RegionData, RegionInfo, RegionProps } from "./Region";
+import { isSubElement } from "./support";
 
 export type ReactPointerInputEvent = React.MouseEvent | React.TouchEvent<HTMLElement>;
 export type DOMPointerEvent = MouseEvent | TouchEvent;
@@ -47,13 +48,9 @@ export const RegionSelect = ({
 }: RegionSelectProps) => {
     const regionCounter = useRef(0);
     const imageRef = useRef<HTMLImageElement>(null);
-    const isChanging = useRef(false);
     const regionChangeData = useRef<RegionChangeData | null>(null);
     const regionChangeIndex = useRef(-1);
-
-    // const [regionCounter, setRegionCounter] = useState(0);
-    // const [regionChangeData, setRegionChangeData] = useState<RegionChangeData | null>();
-    // const [regionChangeIndex, setRegionChangeIndex] = useState<number>(-1);
+    const isChanging = useRef(false);
 
     const getClientPos = (e: ReactPointerInputEvent | DOMPointerEvent): ClientPosition => {
         let pageX, pageY;
@@ -84,26 +81,27 @@ export const RegionSelect = ({
             y: rectTop,
         };
     };
+
     const handleClickStart = (event: ReactPointerInputEvent) => {
         const target = event.target as HTMLElement;
-        if (target.dataset.wrapper || target.dataset.dir) {
+        if (
+            target.dataset.wrapper ||
+            target.dataset.dir ||
+            isSubElement(target, (el) => el.dataset && !!el.dataset.wrapper)
+        ) {
             return;
         }
-        // Rest of the code...
-        event.preventDefault();
-
         if (!imageRef.current) {
             return;
         }
 
-        if (isChanging.current) {
-            return;
-        }
+        event.preventDefault();
 
         const clientPos = getClientPos(event);
         const imageOffset = getElementOffset(imageRef.current);
         const xPc = ((clientPos.x - imageOffset.x) / imageRef.current.offsetWidth) * 100;
         const yPc = ((clientPos.y - imageOffset.y) / imageRef.current.offsetHeight) * 100;
+
         isChanging.current = true;
         const rect: RegionInfo = {
             data: {
@@ -136,12 +134,15 @@ export const RegionSelect = ({
             onChange([...regions.slice(0, maxRegions - 1), rect]);
             regionChangeIndex.current = maxRegions - 1;
         }
+        console.log("Click start:", isChanging.current, regionChangeIndex.current, regionChangeData.current);
     };
+
     const regionMoveStart = (event: ReactPointerInputEvent, index: number) => {
         const target = event.target as HTMLElement;
         if (!target.dataset.wrapper && !target.dataset.dir) {
-            //             return;
+            return;
         }
+
         event.preventDefault();
 
         if (!imageRef.current) {
@@ -153,10 +154,6 @@ export const RegionSelect = ({
 
         const regionPos = regions[index].pos;
         const regionDim = regions[index].dim;
-
-        if (!regionPos || !regionDim) {
-            return;
-        }
 
         const regionLeft = (regionPos.x / 100) * imageRef.current.offsetWidth + imageOffset.x;
         const regionTop = (regionPos.y / 100) * imageRef.current.offsetHeight + imageOffset.y;
@@ -187,6 +184,7 @@ export const RegionSelect = ({
         }
 
         isChanging.current = true;
+
         regionChangeData.current = {
             imageOffsetLeft: imageOffset.x,
             imageOffsetTop: imageOffset.y,
@@ -204,10 +202,9 @@ export const RegionSelect = ({
     };
 
     const handleClickEnd = () => {
-        if (!isChanging) {
+        if (!isChanging.current) {
             return;
         }
-
         if (regionChangeIndex.current < 0) {
             return;
         }
@@ -216,8 +213,12 @@ export const RegionSelect = ({
         }
 
         isChanging.current = false;
+
+        console.log("No longer changing:", isChanging.current, regionChangeIndex.current, regionChangeData.current);
+
         const index = regionChangeIndex.current;
         const updatedRegions = [...regions];
+
         updatedRegions[index] = {
             ...updatedRegions[index],
             data: {
