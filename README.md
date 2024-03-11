@@ -5,7 +5,7 @@ A reimplementation of [`react-region-select`](https://github.com/casavi/react-re
 ## Usage
 
 ```tsx
-import ReactRegionSelect from "react-region-select-2";
+import RegionSelect from "react-region-select-2";
 ```
 
 ```tsx
