@@ -13,6 +13,6 @@
         "lib": ["dom", "dom.iterable", "esnext"],
         "outDir": "./lib"
     },
-    "include": ["src", "example"],
+    "include": ["src", "src/example"],
     "exclude": ["node_modules"]
 }
