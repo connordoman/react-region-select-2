@@ -4953,7 +4953,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"on-finished@npm:2.4.1":
+"on-finished@npm:2.4.1, on-finished@npm:^2.4.1":
   version: 2.4.1
   resolution: "on-finished@npm:2.4.1"
   dependencies:
@@ -6501,12 +6501,13 @@ __metadata:
   linkType: hard
 
 "webpack-dev-middleware@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "webpack-dev-middleware@npm:7.0.0"
+  version: 7.2.1
+  resolution: "webpack-dev-middleware@npm:7.2.1"
   dependencies:
     colorette: "npm:^2.0.10"
     memfs: "npm:^4.6.0"
     mime-types: "npm:^2.1.31"
+    on-finished: "npm:^2.4.1"
     range-parser: "npm:^1.2.1"
     schema-utils: "npm:^4.0.0"
   peerDependencies:
@@ -6514,7 +6515,7 @@ __metadata:
   peerDependenciesMeta:
     webpack:
       optional: true
-  checksum: 10c0/f1dcabc60d321c3e63f94c9b1322f139426d0ca5e0e226343149475ff34dde9a3fb680c6c8bd43745ef99010e9937324ff2c04d04f3f93250dd44cbfdd4650cd
+  checksum: 10c0/e3a61098d5fe3325f698f8f97395f8625b96717e690170f3e4704c939dc96cbb57a871730d3ba4d19f06975b558d4f283bdcc801d823463a12da0dbc3844b531
   languageName: node
   linkType: hard
 
